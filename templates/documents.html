@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes documents - JurisFix Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f7fafc;
+            min-height: 100vh;
+            color: #2d3748;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: #f7fafc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: #edf2f7;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .user-role {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        .btn-logout {
+            padding: 8px 16px;
+            background: #f56565;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-logout:hover {
+            background: #e53e3e;
+            transform: translateY(-1px);
+        }
+
+        /* Navigation breadcrumb */
+        .breadcrumb {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 30px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: #764ba2;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header-content h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-header-content p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .btn-new-doc {
+            padding: 15px 30px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-new-doc:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Filters and search */
+        .filters-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 1.2rem;
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: #f7fafc;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 4px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .view-btn {
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .view-btn.active {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #667eea;
+        }
+
+        /* Documents grid */
+        .documents-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .documents-header {
+            padding: 25px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .documents-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .documents-count {
+            color: #718096;
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .sort-dropdown {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f7fafc;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* Grid view */
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            padding: 25px;
+        }
+
+        .document-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #fafafa;
+        }
+
+        .document-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        /* List view */
+        .documents-list {
+            display: none;
+        }
+
+        .documents-list.active {
+            display: block;
+        }
+
+        .documents-grid.list-view {
+            display: none;
+        }
+
+        .document-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 120px 100px;
+            gap: 20px;
+            padding: 20px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .document-row:hover {
+            background: #f7fafc;
+        }
+
+        .document-row:last-child {
+            border-bottom: none;
+        }
+
+        .list-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 120px 100px;
+            gap: 20px;
+            padding: 15px 25px;
+            background: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .document-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .document-meta {
+            display: flex;
+            gap: 15px;
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .document-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .document-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-draft {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .status-processing {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-archived {
+            background: #fce7f3;
+            color: #9d174d;
+        }
+
+        .document-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        .document-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .action-btn {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .action-btn.edit {
+            background: #e6fffa;
+            color: #065f46;
+        }
+
+        .action-btn.edit:hover {
+            background: #ccfbf1;
+        }
+
+        .action-btn.delete {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .action-btn.delete:hover {
+            background: #feb2b2;
+        }
+
+        .action-btn.download {
+            background: #e6f3ff;
+            color: #1e40af;
+        }
+
+        .action-btn.download:hover {
+            background: #bfdbfe;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 25px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .pagination-btn {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #4a5568;
+        }
+
+        .pagination-btn:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .pagination-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            color: #718096;
+            font-size: 0.9rem;
+            margin: 0 15px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+
+        .empty-state-desc {
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* Loading */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: #dc3545;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+
+        .modal-body {
+            margin-bottom: 25px;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #edf2f7;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+            transform: translateY(-1px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .filters-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: auto;
+            }
+
+            .documents-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .document-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .list-header {
+                display: none;
+            }
+
+            .header-content {
+                padding: 15px 20px;
+            }
+
+            .user-details {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <span class="logo">⚖️</span>
+                <span class="logo-text">JurisFix</span>
+            </div>
+            
+            <div class="user-menu">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        {% if user.name %}
+                            {{ user.name[0] | upper }}
+                        {% else %}
+                            U
+                        {% endif %}
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name">{{ user.name or 'Utilisateur' }}</div>
+                        <div class="user-role">{{ user.service or 'Collaborateur' }}</div>
+                    </div>
+                </div>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Déconnexion</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <a href="{{ url_for('dashboard') }}">🏠 Dashboard</a>
+        <span>›</span>
+        <span>Mes documents</span>
+    </nav>
+
+    <!-- Main content -->
+    <main class="container">
+        <!-- Page header -->
+        <section class="page-header">
+            <div class="page-header-content">
+                <h1>📄 Mes documents</h1>
+                <p>Gérez et organisez tous vos documents juridiques corrigés</p>
+            </div>
+            <a href="{{ url_for('editor') }}" class="btn-new-doc">
+                <span>📝</span>
+                <span>Nouveau document</span>
+            </a>
+        </section>
+
+        <!-- Filters and search -->
+        <section class="filters-section">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    placeholder="Rechercher dans vos documents..."
+                    id="searchInput"
+                >
+            </div>
+            
+            <select class="filter-select" id="statusFilter">
+                <option value="">Tous les statuts</option>
+                <option value="draft">Brouillon</option>
+                <option value="processing">En cours</option>
+                <option value="completed">Terminé</option>
+                <option value="archived">Archivé</option>
+            </select>
+            
+            <select class="filter-select" id="agentFilter">
+                <option value="">Tous les agents</option>
+                <option value="jurifix">JuriFix</option>
+            </select>
+            
+            <div class="view-toggle">
+                <button class="view-btn active" id="gridViewBtn" onclick="switchView('grid')">
+                    ⊞
+                </button>
+                <button class="view-btn" id="listViewBtn" onclick="switchView('list')">
+                    ☰
+                </button>
+            </div>
+        </section>
+
+        <!-- Documents container -->
+        <section class="documents-container">
+            <div class="documents-header">
+                <div>
+                    <h2 class="documents-title">
+                        📚 Vos documents
+                        <span class="documents-count" id="documentsCount">(0 documents)</span>
+                    </h2>
+                </div>
+                <select class="sort-dropdown" id="sortSelect">
+                    <option value="updated_at">Plus récents</option>
+                    <option value="created_at">Date de création</option>
+                    <option value="title">Titre A-Z</option>
+                    <option value="status">Statut</option>
+                </select>
+            </div>
+
+            <!-- Loading state -->
+            <div id="loadingContainer" class="loading-container">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Grid view -->
+            <div id="documentsGrid" class="documents-grid">
+                <!-- Documents will be loaded here -->
+            </div>
+
+            <!-- List view -->
+            <div id="documentsList" class="documents-list">
+                <div class="list-header">
+                    <div>Document</div>
+                    <div>Agent</div>
+                    <div>Statut</div>
+                    <div>Modifié</div>
+                    <div>Actions</div>
+                </div>
+                <div id="documentsListContent">
+                    <!-- List items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Empty state -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">📄</div>
+                <h3 class="empty-state-title">Aucun document trouvé</h3>
+                <p class="empty-state-desc">
+                    Vous n'avez pas encore créé de document ou aucun document ne correspond à vos filtres.
+                </p>
+                <a href="{{ url_for('editor') }}" class="btn btn-primary">
+                    <span>📝</span>
+                    <span>Créer votre premier document</span>
+                </a>
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination" class="pagination" style="display: none;">
+                <button class="pagination-btn" id="prevBtn" onclick="changePage(-1)">‹ Précédent</button>
+                <div class="pagination-info" id="paginationInfo">Page 1 sur 1</div>
+                <button class="pagination-btn" id="nextBtn" onclick="changePage(1)">Suivant ›</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Delete confirmation modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">🗑️ Confirmer la suppression</div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer ce document ? Cette action est irréversible.
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Annuler</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        Action effectuée avec succès !
+    </div>
+
+    <script>
+        // Variables globales
+        let currentPage = 1;
+        let currentView = 'grid';
+        let documentsData = [];
+        let filteredDocuments = [];
+        let totalPages = 1;
+        const itemsPerPage = 12;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDocuments();
+            setupEventListeners();
+        });
+
+        // Chargement des documents
+        async function loadDocuments() {
+            try {
+                showLoading(true);
+                
+                const response = await fetch(`/api/documents?page=${currentPage}&per_page=${itemsPerPage}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    documentsData = data.documents || [];
+                    totalPages = data.pages || 1;
+                    
+                    filterDocuments();
+                    displayDocuments();
+                    updatePagination();
+                    updateDocumentsCount();
+                } else {
+                    showNotification('Erreur lors du chargement des documents', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('Erreur de connexion', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Configuration des écouteurs d'événements
+        function setupEventListeners() {
+            // Recherche
+            document.getElementById('searchInput').addEventListener('input', debounce(filterAndDisplay, 300));
+            
+            // Filtres
+            document.getElementById('statusFilter').addEventListener('change', filterAndDisplay);
+            document.getElementById('agentFilter').addEventListener('change', filterAndDisplay);
+            
+            // Tri
+            document.getElementById('sortSelect').addEventListener('change', sortAndDisplay);
+        }
+
+        // Filtrage des documents
+        function filterDocuments() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const agentFilter = document.getElementById('agentFilter').value;
+
+            filteredDocuments = documentsData.filter(doc => {
+                const matchesSearch = doc.title.toLowerCase().includes(searchTerm);
+                const matchesStatus = !statusFilter || doc.status === statusFilter;
+                const matchesAgent = !agentFilter || doc.agent_used === agentFilter;
+                
+                return matchesSearch && matchesStatus && matchesAgent;
+            });
+        }
+
+        // Tri des documents
+        function sortDocuments() {
+            const sortBy = document.getElementById('sortSelect').value;
+            
+            filteredDocuments.sort((a, b) => {
+                switch (sortBy) {
+                    case 'title':
+                        return a.title.localeCompare(b.title);
+                    case 'status':
+                        return a.status.localeCompare(b.status);
+                    case 'created_at':
+                        return new Date(b.created_at) - new Date(a.created_at);
+                    case 'updated_at':
+                    default:
+                        return new Date(b.updated_at) - new Date(a.updated_at);
+                }
+            });
+        }
+
+        // Affichage des documents
+        function displayDocuments() {
+            if (filteredDocuments.length === 0) {
+                showEmptyState();
+                return;
+            }
+            
+            hideEmptyState();
+            
+            if (currentView === 'grid') {
+                displayGridView();
+            } else {
+                displayListView();
+            }
+        }
+
+        // Vue grille
+        function displayGridView() {
+            const container = document.getElementById('documentsGrid');
+            container.innerHTML = '';
+            
+            filteredDocuments.forEach(doc => {
+                const card = createDocumentCard(doc);
+                container.appendChild(card);
+            });
+        }
+
+        // Vue liste
+        function displayListView() {
+            const container = document.getElementById('documentsListContent');
+            container.innerHTML = '';
+            
+            filteredDocuments.forEach(doc => {
+                const row = createDocumentRow(doc);
+                container.appendChild(row);
+            });
+        }
+
+        // Création d'une carte document
+        function createDocumentCard(doc) {
+            const card = document.createElement('div');
+            card.className = 'document-card';
+            card.onclick = () => openDocument(doc.id, doc.agent_used);
+            
+            card.innerHTML = `
+                <div class="document-title">
+                    📄 ${doc.title}
+                </div>
+                <div class="document-meta">
+                    <span>📅 ${doc.updated_at}</span>
+                    <span>🤖 ${doc.agent_used.charAt(0).toUpperCase() + doc.agent_used.slice(1)}</span>
+                </div>
+                <div class="document-status status-${doc.status}">
+                    ${getStatusIcon(doc.status)} ${getStatusText(doc.status)}
+                </div>
+                <div class="document-stats">
+                    <div class="document-stat">
+                        📝 ${doc.word_count || 0} mots
+                    </div>
+                    <div class="document-stat">
+                        ✏️ ${doc.corrections_count || 0} corrections
+                    </div>
+                </div>
+                <div class="document-actions">
+                    <button class="action-btn edit" onclick="event.stopPropagation(); editDocument('${doc.id}', '${doc.agent_used}')">
+                        ✏️ Modifier
+                    </button>
+                    <button class="action-btn download" onclick="event.stopPropagation(); downloadDocument('${doc.id}')">
+                        💾 Export
+                    </button>
+                    <button class="action-btn delete" onclick="event.stopPropagation(); deleteDocument('${doc.id}')">
+                        🗑️ Supprimer
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Création d'une ligne document
+        function createDocumentRow(doc) {
+            const row = document.createElement('div');
+            row.className = 'document-row';
+            row.onclick = () => openDocument(doc.id, doc.agent_used);
+            
+            row.innerHTML = `
+                <div>
+                    <div class="document-title">📄 ${doc.title}</div>
+                    <div class="document-stats">
+                        <span>📝 ${doc.word_count || 0} mots</span>
+                        <span>✏️ ${doc.corrections_count || 0} corrections</span>
+                    </div>
+                </div>
+                <div>${doc.agent_used.charAt(0).toUpperCase() + doc.agent_used.slice(1)}</div>
+                <div class="document-status status-${doc.status}">
+                    ${getStatusIcon(doc.status)} ${getStatusText(doc.status)}
+                </div>
+                <div>${doc.updated_at}</div>
+                <div class="document-actions">
+                    <button class="action-btn edit" onclick="event.stopPropagation(); editDocument('${doc.id}', '${doc.agent_used}')">
+                        ✏️
+                    </button>
+                    <button class="action-btn download" onclick="event.stopPropagation(); downloadDocument('${doc.id}')">
+                        💾
+                    </button>
+                    <button class="action-btn delete" onclick="event.stopPropagation(); deleteDocument('${doc.id}')">
+                        🗑️
+                    </button>
+                </div>
+            `;
+            
+            return row;
+        }
+
+        // Utilitaires pour les statuts
+        function getStatusIcon(status) {
+            switch (status) {
+                case 'completed': return '✅';
+                case 'processing': return '⏳';
+                case 'archived': return '📦';
+                case 'draft':
+                default: return '📝';
+            }
+        }
+
+        function getStatusText(status) {
+            switch (status) {
+                case 'completed': return 'Terminé';
+                case 'processing': return 'En cours';
+                case 'archived': return 'Archivé';
+                case 'draft':
+                default: return 'Brouillon';
+            }
+        }
+
+        // Actions sur les documents
+        function openDocument(docId, agentUsed) {
+            window.location.href = `{{ url_for('editor') }}/${agentUsed}?doc=${docId}`;
+        }
+
+        function editDocument(docId, agentUsed) {
+            window.location.href = `{{ url_for('editor') }}/${agentUsed}?doc=${docId}`;
+        }
+
+        async function downloadDocument(docId) {
+            try {
+                const response = await fetch(`/api/documents/${docId}`);
+                const doc = await response.json();
+                
+                if (response.ok) {
+                    // Créer un fichier texte avec le contenu corrigé
+                    const content = doc.corrected_content || doc.content;
+                    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                    
+                    // Télécharger le fichier
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${doc.title.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().slice(0,10)}.txt`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    showNotification('Document téléchargé avec succès !');
+                } else {
+                    showNotification('Erreur lors du téléchargement', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('Erreur lors du téléchargement', 'error');
+            }
+        }
+
+        let documentToDelete = null;
+
+        function deleteDocument(docId) {
+            documentToDelete = docId;
+            document.getElementById('deleteModal').classList.add('show');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('show');
+            documentToDelete = null;
+        }
+
+        // Confirmation de suppression
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+            if (!documentToDelete) return;
+            
+            try {
+                const response = await fetch(`/api/documents/${documentToDelete}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Document supprimé avec succès !');
+                    closeDeleteModal();
+                    loadDocuments(); // Recharger la liste
+                } else {
+                    showNotification('Erreur lors de la suppression', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('Erreur lors de la suppression', 'error');
+            }
+        });
+
+        // Changement de vue
+        function switchView(view) {
+            currentView = view;
+            
+            // Mise à jour des boutons
+            document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
+            document.getElementById('listViewBtn').classList.toggle('active', view === 'list');
+            
+            // Affichage des conteneurs appropriés
+            document.getElementById('documentsGrid').classList.toggle('list-view', view === 'list');
+            document.getElementById('documentsList').classList.toggle('active', view === 'list');
+            
+            displayDocuments();
+        }
+
+        // Pagination
+        function changePage(direction) {
+            const newPage = currentPage + direction;
+            if (newPage >= 1 && newPage <= totalPages) {
+                currentPage = newPage;
+                loadDocuments();
+            }
+        }
+
+        function updatePagination() {
+            const pagination = document.getElementById('pagination');
+            const paginationInfo = document.getElementById('paginationInfo');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (totalPages <= 1) {
+                pagination.style.display = 'none';
+                return;
+            }
+            
+            pagination.style.display = 'flex';
+            paginationInfo.textContent = `Page ${currentPage} sur ${totalPages}`;
+            
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages;
+        }
+
+        // Utilitaires d'affichage
+        function showLoading(show) {
+            document.getElementById('loadingContainer').style.display = show ? 'flex' : 'none';
+            document.getElementById('documentsGrid').style.display = show ? 'none' : 'grid';
+            document.getElementById('documentsList').style.display = show ? 'none' : (currentView === 'list' ? 'block' : 'none');
+        }
+
+        function showEmptyState() {
+            document.getElementById('emptyState').style.display = 'block';
+            document.getElementById('documentsGrid').style.display = 'none';
+            document.getElementById('documentsList').style.display = 'none';
+            document.getElementById('pagination').style.display = 'none';
+        }
+
+        function hideEmptyState() {
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('documentsGrid').style.display = currentView === 'grid' ? 'grid' : 'none';
+            document.getElementById('documentsList').style.display = currentView === 'list' ? 'block' : 'none';
+        }
+
+        function updateDocumentsCount() {
+            const count = filteredDocuments.length;
+            document.getElementById('documentsCount').textContent = `(${count} document${count !== 1 ? 's' : ''})`;
+        }
+
+        // Fonctions de filtrage et tri avec debounce
+        function filterAndDisplay() {
+            filterDocuments();
+            sortDocuments();
+            displayDocuments();
+            updateDocumentsCount();
+        }
+
+        function sortAndDisplay() {
+            sortDocuments();
+            displayDocuments();
+        }
+
+        // Debounce pour la recherche
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Affichage des notifications
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // Fermeture du modal en cliquant à l'extérieur
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+
+        // Raccourcis clavier
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDeleteModal();
+            }
+            
+            if (e.key === 'F3' || (e.ctrlKey && e.key === 'f')) {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        });
+
+        // Auto-refresh des données toutes les 30 secondes
+        setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                loadDocuments();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

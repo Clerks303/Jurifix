@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - JurisFix Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f7fafc;
+            min-height: 100vh;
+            color: #2d3748;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: #f7fafc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: #edf2f7;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .user-role {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        .btn-logout {
+            padding: 8px 16px;
+            background: #f56565;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-logout:hover {
+            background: #e53e3e;
+            transform: translateY(-1px);
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* Welcome section */
+        .welcome-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .welcome-content {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .welcome-text h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .welcome-text p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .btn-new-doc {
+            padding: 15px 30px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-new-doc:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        .stat-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            padding: 4px 8px;
+            background: #c6f6d5;
+            color: #276749;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .stat-trend.down {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .stat-card:hover::after {
+            animation: shine 0.5s ease;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+                opacity: 0;
+            }
+        }
+        /* Recent documents */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .btn-view-all {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .btn-view-all:hover {
+            color: #764ba2;
+        }
+
+        .documents-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .document-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .document-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .document-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .document-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .document-meta {
+            display: flex;
+            gap: 15px;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .document-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .document-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .document-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .status-draft {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .status-processing {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .document-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .document-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .document-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .document-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .document-stat-icon {
+            color: #a0aec0;
+        }
+
+        .document-stat-value {
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        /* Quick actions */
+        .quick-actions {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-top: 40px;
+        }
+        
+        .quick-actions .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .action-card {
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .action-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .action-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .action-desc {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+
+        .empty-state-desc {
+            margin-bottom: 30px;
+        }
+
+        /* Loading spinner */
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .welcome-content {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                padding: 15px 20px;
+            }
+
+            .user-details {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <span class="logo">⚖️</span>
+                <span class="logo-text">JurisFix</span>
+            </div>
+            
+            <div class="user-menu">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        {% if user.name %}
+                            {{ user.name[0] | upper }}
+                        {% else %}
+                            U
+                        {% endif %}
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name">{{ user.name or 'Utilisateur' }}</div>
+                        <div class="user-role">{{ user.service or 'Collaborateur' }}</div>
+                    </div>
+                </div>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Déconnexion</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="container">
+        <!-- Welcome section -->
+        <section class="welcome-section">
+            <div class="welcome-content">
+                <div class="welcome-text">
+                    <h1>Bonjour {% if user.name %}{{ user.name.split()[0] }}{% else %}{{ user.email.split('@')[0] }}{% endif %} 👋</h1>
+                    <p>Bienvenue sur votre espace JurisFix. Gérez vos documents juridiques en toute simplicité.</p>
+                    <a href="{{ url_for('editor') }}" class="btn-new-doc">
+                        <span>📝</span>
+                        <span>Nouveau document</span>
+                    </a>
+                </div>
+                <div class="welcome-illustration">
+                    <!-- Illustration ou logo ici -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📄</div>
+                <div class="stat-value">{{ stats.total_documents or 0 }}</div>
+                <div class="stat-label">Documents traités</div>
+                {% if stats.documents_this_month and stats.documents_this_month > 0 %}
+                <div class="stat-trend">
+                    <span>📈</span>
+                    <span>+{{ stats.documents_this_month }} ce mois</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">✍️</div>
+                <div class="stat-value">{{ stats.total_corrections or 0 }}</div>
+                <div class="stat-label">Corrections effectuées</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value">{{ stats.time_saved or '0' }}h</div>
+                <div class="stat-label">Temps économisé</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value">98%</div>
+                <div class="stat-label">Précision moyenne</div>
+            </div>
+        </section>
+
+        <!-- Recent documents -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">Documents récents</h2>
+                <a href="#" class="btn-view-all">
+                    <span>Voir tout</span>
+                    <span>→</span>
+                </a>
+            </div>
+
+            {% if stats.recent_documents is defined and stats.recent_documents|length > 0 %}
+            <div class="documents-grid">
+                {% for doc in stats.recent_documents %}
+                <div class="document-card" onclick="window.location.href='{{ url_for('editor', agent_name=doc.agent_used) }}?doc={{ doc.id }}'">
+                    <div class="document-header">
+                        <div>
+                            <h3 class="document-title">{{ doc.title }}</h3>
+                            <div class="document-meta">
+                                <span>📅 {{ doc.updated_at }}</span>
+                                <span>🤖 {{ doc.agent_used|capitalize }}</span>
+                            </div>
+                        </div>
+                        <span class="document-status status-{{ doc.status }}">
+                            {% if doc.status == 'completed' %}
+                                ✅ Terminé
+                            {% elif doc.status == 'processing' %}
+                                ⏳ En cours
+                            {% else %}
+                                📝 Brouillon
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="document-stats">
+                        <div class="document-stat">
+                            <span class="document-stat-icon">📝</span>
+                            <span class="document-stat-value">{{ doc.word_count or 0 }} mots</span>
+                        </div>
+                        <div class="document-stat">
+                            <span class="document-stat-icon">✏️</span>
+                            <span class="document-stat-value">{{ doc.corrections_count or 0 }} corrections</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📄</div>
+                <h3 class="empty-state-title">Aucun document récent</h3>
+                <p class="empty-state-desc">Commencez par créer votre premier document juridique</p>
+                <a href="{{ url_for('editor') }}" class="btn-new-doc">
+                    <span>📝</span>
+                    <span>Créer un document</span>
+                </a>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Quick actions -->
+        <section class="quick-actions">
+            <h2 class="section-title">Actions rapides</h2>
+            <div class="actions-grid">
+                <a href="{{ url_for('editor') }}" class="action-card">
+                    <div class="action-icon">📝</div>
+                    <div class="action-title">Nouveau document</div>
+                    <div class="action-desc">Créer et corriger un nouveau texte</div>
+                </a>
+                
+                <a href="{{ url_for('profile') }}" class="action-card">
+                    <div class="action-icon">👤</div>
+                    <div class="action-title">Mon profil</div>
+                    <div class="action-desc">Gérer vos informations</div>
+                </a>
+                
+                <a href="{{ url_for('documents') }}" class="action-card">
+                    <div class="action-icon">📂</div>
+                    <div class="action-title">Mes documents</div>
+                    <div class="action-desc">Consulter tous vos documents</div>
+                </a>
+                
+                <a href="{{ url_for('stats') }}" class="action-card">
+                    <div class="action-icon">📊</div>
+                    <div class="action-title">Statistiques</div>
+                    <div class="action-desc">Voir vos performances</div>
+                </a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon profil - JurisFix Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f7fafc;
+            min-height: 100vh;
+            color: #2d3748;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: #f7fafc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: #edf2f7;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .user-role {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        .btn-logout {
+            padding: 8px 16px;
+            background: #f56565;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-logout:hover {
+            background: #e53e3e;
+            transform: translateY(-1px);
+        }
+
+        /* Navigation breadcrumb */
+        .breadcrumb {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 30px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: #764ba2;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        .profile-sidebar {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+
+        .profile-main {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-avatar-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .profile-service {
+            color: #718096;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .profile-stats {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .stat-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .btn-change-avatar {
+            background: #edf2f7;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-change-avatar:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input:disabled {
+            background: #f1f5f9;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #edf2f7;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+            transform: translateY(-1px);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: #dc3545;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .security-section {
+            background: #fffbf0;
+            border: 1px solid #f6e05e;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .security-title {
+            color: #744210;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .security-text {
+            color: #744210;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .info-card {
+            background: #e6fffa;
+            border: 1px solid #81e6d9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-card-title {
+            color: #234e52;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card-text {
+            color: #234e52;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                padding: 15px 20px;
+            }
+
+            .user-details {
+                display: none;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <span class="logo">⚖️</span>
+                <span class="logo-text">JurisFix</span>
+            </div>
+            
+            <div class="user-menu">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        {% if user.name %}
+                            {{ user.name[0] | upper }}
+                        {% else %}
+                            U
+                        {% endif %}
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name">{{ user.name or 'Utilisateur' }}</div>
+                        <div class="user-role">{{ user.service or 'Collaborateur' }}</div>
+                    </div>
+                </div>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Déconnexion</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <a href="{{ url_for('dashboard') }}">🏠 Dashboard</a>
+        <span>›</span>
+        <span>Mon profil</span>
+    </nav>
+
+    <!-- Main content -->
+    <main class="container">
+        <!-- Page header -->
+        <section class="page-header">
+            <h1>👤 Mon profil</h1>
+            <p>Gérez vos informations personnelles et préférences de compte</p>
+        </section>
+
+        <div class="profile-grid">
+            <!-- Sidebar -->
+            <aside class="profile-sidebar">
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar-large" id="profile-avatar">
+                        {{ user.name[0] | upper if user.name else 'U' }}
+                    </div>
+                    <div class="profile-name" id="profile-name">{{ user.name or 'Utilisateur' }}</div>
+                    <div class="profile-service" id="profile-service">{{ user.service or 'Service non défini' }}</div>
+                    <button class="btn-change-avatar" onclick="changeAvatar()">
+                        📸 Changer l'avatar
+                    </button>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Membre depuis</span>
+                        <span class="stat-value" id="member-since">{{ user.created_at.strftime('%B %Y') if user.created_at else 'N/A' }}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Dernière connexion</span>
+                        <span class="stat-value" id="last-login">{{ user.last_login.strftime('%d/%m/%Y') if user.last_login else 'Première connexion' }}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Rôle</span>
+                        <span class="stat-value" id="user-role">{{ user.role | capitalize }}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Statut</span>
+                        <span class="stat-value" style="color: #28a745;">✅ Actif</span>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-card-title">
+                        ℹ️ Information
+                    </div>
+                    <div class="info-card-text">
+                        Votre profil est visible uniquement par les administrateurs et votre équipe de service.
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main profile form -->
+            <main class="profile-main">
+                <h2 class="section-title">✏️ Informations personnelles</h2>
+                
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Adresse email</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input" 
+                            value="{{ user.email }}"
+                            disabled
+                        >
+                        <small style="color: #718096; font-size: 0.85rem; margin-top: 5px; display: block;">
+                            L'email ne peut pas être modifié pour des raisons de sécurité.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="name">Nom complet *</label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            class="form-input" 
+                            value="{{ user.name or '' }}"
+                            placeholder="Prénom Nom"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="service">Service</label>
+                        <select id="service" name="service" class="form-select">
+                            <option value="">Sélectionner un service</option>
+                            <option value="Médiation bancaire - Particuliers" {{ 'selected' if user.service == 'Médiation bancaire - Particuliers' else '' }}>Médiation bancaire - Particuliers</option>
+                            <option value="Médiation bancaire - Entreprises" {{ 'selected' if user.service == 'Médiation bancaire - Entreprises' else '' }}>Médiation bancaire - Entreprises</option>
+                            <option value="Médiation bancaire - Crédit" {{ 'selected' if user.service == 'Médiation bancaire - Crédit' else '' }}>Médiation bancaire - Crédit</option>
+                            <option value="Médiation bancaire - Épargne" {{ 'selected' if user.service == 'Médiation bancaire - Épargne' else '' }}>Médiation bancaire - Épargne</option>
+                            <option value="Service juridique" {{ 'selected' if user.service == 'Service juridique' else '' }}>Service juridique</option>
+                            <option value="Administration" {{ 'selected' if user.service == 'Administration' else '' }}>Administration</option>
+                            <option value="Direction" {{ 'selected' if user.service == 'Direction' else '' }}>Direction</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="role">Rôle</label>
+                        <input 
+                            type="text" 
+                            id="role" 
+                            name="role" 
+                            class="form-input" 
+                            value="{{ user.role | capitalize }}"
+                            disabled
+                        >
+                        <small style="color: #718096; font-size: 0.85rem; margin-top: 5px; display: block;">
+                            Le rôle est défini par l'administrateur système.
+                        </small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                            🔄 Annuler
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="saveBtn">
+                            <span>💾 Enregistrer les modifications</span>
+                            <span class="spinner" style="display: none;"></span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Security section -->
+                <div class="security-section">
+                    <div class="security-title">
+                        🔒 Sécurité et mot de passe
+                    </div>
+                    <p class="security-text">
+                        Pour modifier votre mot de passe ou gérer les paramètres de sécurité avancés, 
+                        veuillez contacter l'administrateur système à 
+                        <a href="mailto:admin@jurisfix.fr" style="color: #667eea;">admin@jurisfix.fr</a>
+                    </p>
+                </div>
+            </main>
+        </div>
+    </main>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        Profil mis à jour avec succès !
+    </div>
+
+    <script>
+        // Variables globales
+        let originalFormData = {};
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserProfile();
+            storeOriginalData();
+        });
+
+        // Charger le profil utilisateur
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('/api/profile');
+                const userData = await response.json();
+                
+                if (response.ok) {
+                    updateProfileDisplay(userData);
+                } else {
+                    showNotification('Erreur lors du chargement du profil', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('Erreur de connexion', 'error');
+            }
+        }
+
+        // Mettre à jour l'affichage du profil
+        function updateProfileDisplay(userData) {
+            document.getElementById('name').value = userData.name || '';
+            document.getElementById('service').value = userData.service || '';
+            
+            // Mise à jour de la sidebar
+            document.getElementById('profile-name').textContent = userData.name || 'Utilisateur';
+            document.getElementById('profile-service').textContent = userData.service || 'Service non défini';
+            document.getElementById('profile-avatar').textContent = userData.name ? userData.name[0].toUpperCase() : 'U';
+            
+            if (userData.created_at) {
+                const createdDate = new Date(userData.created_at);
+                document.getElementById('member-since').textContent = createdDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+            }
+            
+            if (userData.last_login) {
+                const lastLoginDate = new Date(userData.last_login);
+                document.getElementById('last-login').textContent = lastLoginDate.toLocaleDateString('fr-FR');
+            }
+            
+            document.getElementById('user-role').textContent = userData.role ? userData.role.charAt(0).toUpperCase() + userData.role.slice(1) : 'Collaborateur';
+        }
+
+        // Sauvegarder les données originales
+        function storeOriginalData() {
+            const form = document.getElementById('profileForm');
+            const formData = new FormData(form);
+            originalFormData = {
+                name: formData.get('name'),
+                service: formData.get('service')
+            };
+        }
+
+        // Gérer la soumission du formulaire
+        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const saveBtn = document.getElementById('saveBtn');
+            const btnText = saveBtn.querySelector('span:first-child');
+            const spinner = saveBtn.querySelector('.spinner');
+            
+            // UI feedback
+            saveBtn.disabled = true;
+            btnText.textContent = '⏳ Enregistrement...';
+            spinner.style.display = 'inline-block';
+            
+            const formData = new FormData(this);
+            const data = {
+                name: formData.get('name'),
+                service: formData.get('service')
+            };
+            
+            try {
+                const response = await fetch('/api/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Profil mis à jour avec succès !');
+                    updateProfileDisplay(data);
+                    storeOriginalData(); // Mettre à jour les données de référence
+                } else {
+                    showNotification(result.message || 'Erreur lors de la mise à jour', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('Erreur de connexion au serveur', 'error');
+            } finally {
+                // Reset button
+                saveBtn.disabled = false;
+                btnText.textContent = '💾 Enregistrer les modifications';
+                spinner.style.display = 'none';
+            }
+        });
+
+        // Réinitialiser le formulaire
+        function resetForm() {
+            document.getElementById('name').value = originalFormData.name || '';
+            document.getElementById('service').value = originalFormData.service || '';
+            showNotification('Modifications annulées', 'error');
+        }
+
+        // Changer l'avatar (placeholder pour future fonctionnalité)
+        function changeAvatar() {
+            showNotification('Fonctionnalité de changement d\'avatar bientôt disponible', 'error');
+        }
+
+        // Afficher une notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // Détection des modifications non sauvegardées
+        window.addEventListener('beforeunload', function(e) {
+            const currentData = {
+                name: document.getElementById('name').value,
+                service: document.getElementById('service').value
+            };
+            
+            if (JSON.stringify(currentData) !== JSON.stringify(originalFormData)) {
+                e.preventDefault();
+                e.returnValue = '';
+                return 'Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir quitter ?';
+            }
+        });
+    </script>
+</body>
+</html>

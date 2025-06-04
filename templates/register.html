@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - JurisFix Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 520px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input::placeholder {
+            color: #a0aec0;
+        }
+
+        .password-requirements {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .requirement.valid {
+            color: #48bb78;
+        }
+
+        .requirement.valid::before {
+            content: '✓';
+            color: #48bb78;
+        }
+
+        .requirement.invalid::before {
+            content: '○';
+            color: #a0aec0;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            margin-top: 10px;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .terms {
+            margin: 20px 0;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .terms label {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .terms input[type="checkbox"] {
+            margin-top: 2px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .terms a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .divider span {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0 15px;
+            color: #718096;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .login-section {
+            text-align: center;
+            color: #4a5568;
+        }
+
+        .login-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .login-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            border: 1px solid #fc8181;
+            color: #c53030;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            border: 1px solid #9ae6b4;
+            color: #276749;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 30px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="logo-section">
+            <div class="logo">⚖️</div>
+            <h1>Créer un compte</h1>
+            <p class="subtitle">Rejoignez JurisFix Platform</p>
+        </div>
+
+        <!-- Messages d'erreur/succès -->
+        {% if error %}
+        <div class="error-message">
+            <span>⚠️</span>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <form id="registerForm" method="POST" action="/register">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">Prénom</label>
+                    <input 
+                        type="text" 
+                        id="firstName" 
+                        name="firstName" 
+                        placeholder="Jean"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Nom</label>
+                    <input 
+                        type="text" 
+                        id="lastName" 
+                        name="lastName" 
+                        placeholder="Dupont"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="email">Adresse email professionnelle</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="jean.dupont@fbf.fr"
+                    required
+                >
+            </div>
+
+            <div class="form-group full-width">
+                <label for="service">Service</label>
+                <select id="service" name="service" required>
+                    <option value="">Sélectionnez votre service</option>
+                    <option value="Médiation bancaire">Médiation bancaire</option>
+                    <option value="Service juridique">Service juridique</option>
+                    <option value="Conformité">Conformité</option>
+                    <option value="Relations clientèle">Relations clientèle</option>
+                    <option value="Autre">Autre</option>
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="password">Mot de passe</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="••••••••"
+                    required
+                    minlength="8"
+                >
+                <div class="password-requirements">
+                    <div class="requirement" id="length">Au moins 8 caractères</div>
+                    <div class="requirement" id="uppercase">Une lettre majuscule</div>
+                    <div class="requirement" id="number">Un chiffre</div>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="confirmPassword">Confirmer le mot de passe</label>
+                <input 
+                    type="password" 
+                    id="confirmPassword" 
+                    name="confirmPassword" 
+                    placeholder="••••••••"
+                    required
+                >
+            </div>
+
+            <div class="terms">
+                <label>
+                    <input type="checkbox" id="acceptTerms" name="acceptTerms" required>
+                    <span>J'accepte les <a href="#">conditions d'utilisation</a> et la <a href="#">politique de confidentialité</a> de JurisFix</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-register" id="registerBtn" disabled>
+                Créer mon compte
+            </button>
+        </form>
+
+        <div class="divider">
+            <span>ou</span>
+        </div>
+
+        <div class="login-section">
+            <p>Vous avez déjà un compte ?</p>
+            <a href="/login" class="login-link">Se connecter</a>
+        </div>
+    </div>
+
+    <script>
+        // Password validation
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const registerBtn = document.getElementById('registerBtn');
+        const acceptTermsCheckbox = document.getElementById('acceptTerms');
+
+        const requirements = {
+            length: (pw) => pw.length >= 8,
+            uppercase: (pw) => /[A-Z]/.test(pw),
+            number: (pw) => /\d/.test(pw)
+        };
+
+        function validatePassword() {
+            const password = passwordInput.value;
+            let allValid = true;
+
+            for (const [key, validator] of Object.entries(requirements)) {
+                const element = document.getElementById(key);
+                const isValid = validator(password);
+                
+                element.classList.toggle('valid', isValid);
+                element.classList.toggle('invalid', !isValid);
+                
+                if (!isValid) allValid = false;
+            }
+
+            return allValid;
+        }
+
+        function validateForm() {
+            const passwordValid = validatePassword();
+            const passwordsMatch = passwordInput.value === confirmPasswordInput.value;
+            const termsAccepted = acceptTermsCheckbox.checked;
+            const formFilled = document.getElementById('firstName').value && 
+                              document.getElementById('lastName').value && 
+                              document.getElementById('email').value && 
+                              document.getElementById('service').value;
+
+            registerBtn.disabled = !(passwordValid && passwordsMatch && termsAccepted && formFilled);
+        }
+
+        passwordInput.addEventListener('input', validateForm);
+        confirmPasswordInput.addEventListener('input', validateForm);
+        acceptTermsCheckbox.addEventListener('change', validateForm);
+
+        // Form submission
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {
+                name: `${formData.get('firstName')} ${formData.get('lastName')}`,
+                email: formData.get('email'),
+                password: formData.get('password'),
+                service: formData.get('service')
+            };
+
+            try {
+                registerBtn.disabled = true;
+                registerBtn.textContent = 'Création en cours...';
+
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    window.location.href = result.redirect || '/dashboard';
+                } else {
+                    showError(result.error || 'Erreur lors de l\'inscription');
+                    registerBtn.disabled = false;
+                    registerBtn.textContent = 'Créer mon compte';
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showError('Erreur de connexion au serveur');
+                registerBtn.disabled = false;
+                registerBtn.textContent = 'Créer mon compte';
+            }
+        });
+
+        function showError(message) {
+            const existingError = document.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.innerHTML = `
+                <span>⚠️</span>
+                <span>${message}</span>
+            `;
+
+            const form = document.getElementById('registerForm');
+            form.parentNode.insertBefore(errorDiv, form);
+        }
+
+        // Auto-focus first field
+        document.getElementById('firstName').focus();
+    </script>
+</body>
+</html>

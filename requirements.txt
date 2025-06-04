@@ -1,0 +1,26 @@
+# Core Flask
+Flask==3.0.0
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.0.5
+Flask-Login==0.6.3
+Flask-CORS==4.0.0
+
+# Security
+Werkzeug==3.0.1
+
+# Database
+SQLAlchemy==2.0.23
+alembic==1.13.0
+
+# OpenAI
+openai==1.6.0
+
+# Utilities
+python-dotenv==1.0.0
+beautifulsoup4==4.12.2
+
+# Development (optional)
+flask-debugtoolbar==0.13.1
+
+# Production server (optional)
+gunicorn==21.2.0

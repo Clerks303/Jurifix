@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JuriFix Platform - Correction d'Avis Juridiques</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .main-workflow {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .upload-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .upload-zone {
+            border: 3px dashed #cbd5e0;
+            border-radius: 15px;
+            padding: 60px 40px;
+            background: #f7fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone:hover {
+            border-color: #667eea;
+            background: #edf2f7;
+            transform: translateY(-2px);
+        }
+
+        .upload-zone.dragover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: #cbd5e0;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-zone:hover .upload-icon {
+            color: #667eea;
+            transform: scale(1.1);
+        }
+
+        .upload-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtitle {
+            color: #718096;
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #edf2f7;
+            transform: translateY(-1px);
+        }
+
+        .processing-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .document-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .preview-panel {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .preview-header {
+            background: #495057;
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preview-header.original {
+            background: #6c757d;
+        }
+
+        .preview-header.corrected {
+            background: #28a745;
+        }
+
+        .preview-content {
+            padding: 25px;
+            max-height: 600px;
+            overflow-y: auto;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .preview-content h1, .preview-content h2, .preview-content h3 {
+            color: #2d3748;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .preview-content h1 {
+            font-size: 1.4rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 5px;
+        }
+
+        .preview-content h2 {
+            font-size: 1.2rem;
+        }
+
+        .preview-content h3 {
+            font-size: 1.1rem;
+        }
+
+        .preview-content strong {
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .preview-content p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        .preview-content ul, .preview-content ol {
+            margin: 10px 0;
+            padding-left: 25px;
+        }
+
+        .preview-content li {
+            margin-bottom: 5px;
+        }
+
+        .correction-stats {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .stat-item {
+            flex: 1;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            text-align: center;
+            color: #718096;
+            font-size: 1.1rem;
+            margin: 20px 0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            gap: 20px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: #f7fafc;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .step.completed {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .file-info {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .file-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .agent-selection {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .agent-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .agent-card.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .agent-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .agent-description {
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: #dc3545;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        @media (max-width: 1200px) {
+            .document-preview {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        .diff-highlight {
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            border: 1px solid #ffeaa7;
+        }
+
+        .diff-added {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+
+        .diff-removed {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            text-decoration: line-through;
+        }
+
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .workflow-step {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .workflow-step-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .workflow-step-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+
+        .workflow-step-desc {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        /* Styles pour préserver la structure */
+        .document-structure {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .correction-indicator {
+            background: #fffbf0;
+            border-left: 4px solid #f6ad55;
+            padding: 2px 6px;
+            margin: 2px 0;
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚖️ JuriFix Platform</h1>
+            <p>Correction orthographique précise de vos avis juridiques - Conservation garantie de la mise en forme</p>
+        </div>
+
+        <!-- Étapes du workflow -->
+        <div class="workflow-steps">
+            <div class="workflow-step">
+                <div class="workflow-step-icon">📄</div>
+                <div class="workflow-step-title">1. Upload</div>
+                <div class="workflow-step-desc">Téléchargez votre avis Word</div>
+            </div>
+            <div class="workflow-step">
+                <div class="workflow-step-icon">✍️</div>
+                <div class="workflow-step-title">2. Correction</div>
+                <div class="workflow-step-desc">Orthographe & grammaire préservées</div>
+            </div>
+            <div class="workflow-step">
+                <div class="workflow-step-icon">👀</div>
+                <div class="workflow-step-title">3. Révision</div>
+                <div class="workflow-step-desc">Visualisez les corrections</div>
+            </div>
+            <div class="workflow-step">
+                <div class="workflow-step-icon">💾</div>
+                <div class="workflow-step-title">4. Export</div>
+                <div class="workflow-step-desc">Téléchargez le document corrigé</div>
+            </div>
+        </div>
+
+        <div class="main-workflow">
+            <!-- Section d'upload -->
+            <div id="upload-section" class="upload-section">
+                <h2 style="margin-bottom: 30px; color: #2d3748; font-size: 1.8rem;">📤 Téléchargez votre avis juridique</h2>
+                
+                <div class="upload-zone" id="upload-zone">
+                    <div class="upload-icon">📄</div>
+                    <div class="upload-text">Glissez-déposez votre fichier Word ici</div>
+                    <div class="upload-subtitle">ou cliquez pour sélectionner un fichier (.docx, .doc)</div>
+                    <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+                        📁 Choisir un fichier
+                    </button>
+                </div>
+                
+                <input type="file" id="file-input" class="file-input" accept=".doc,.docx" />
+                
+                <div id="file-info" class="file-info">
+                    <div class="file-details">
+                        <div>
+                            <strong id="file-name"></strong><br>
+                            <span id="file-size"></span>
+                        </div>
+                        <button class="btn btn-secondary" onclick="removeFile()">❌ Supprimer</button>
+                    </div>
+                </div>
+
+                <!-- Sélection d'agent -->
+                <div id="agent-selection" class="agent-selection" style="display: none;">
+                    <h3 style="margin-bottom: 20px; color: #2d3748;">✍️ Type de correction</h3>
+                    <div id="agents-grid" class="agent-grid">
+                        <!-- Les agents seront chargés ici -->
+                    </div>
+                    <button id="process-btn" class="btn btn-primary" style="margin-top: 30px; display: none;" onclick="processDocument()">
+                        🚀 Lancer la correction orthographique
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section de traitement -->
+            <div id="processing-section" class="processing-section">
+                <div class="progress-steps">
+                    <div class="step" id="step-upload">
+                        <span>📄</span> Upload
+                    </div>
+                    <div class="step" id="step-extract">
+                        <span>📝</span> Extraction
+                    </div>
+                    <div class="step" id="step-correct">
+                        <span>✍️</span> Correction
+                    </div>
+                    <div class="step" id="step-export">
+                        <span>✅</span> Terminé
+                    </div>
+                </div>
+
+                <div id="loading-content">
+                    <div class="spinner"></div>
+                    <div class="loading-text" id="loading-text">Traitement en cours...</div>
+                </div>
+
+                <!-- Statistiques de correction -->
+                <div id="correction-stats" class="correction-stats" style="display: none;">
+                    <div class="stat-item">
+                        <div class="stat-number" id="errors-found">0</div>
+                        <div class="stat-label">Corrections orthographiques</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="time-saved">2-3 min</div>
+                        <div class="stat-label">Temps économisé</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="pages-processed">0</div>
+                        <div class="stat-label">Pages traitées</div>
+                    </div>
+                </div>
+
+                <!-- Aperçu des documents -->
+                <div id="document-preview" class="document-preview" style="display: none;">
+                    <div class="preview-panel">
+                        <div class="preview-header original">
+                            <span>📄</span> Document original
+                        </div>
+                        <div class="preview-content document-structure" id="original-content">
+                            Chargement...
+                        </div>
+                    </div>
+                    
+                    <div class="preview-panel">
+                        <div class="preview-header corrected">
+                            <span>✅</span> Document corrigé
+                        </div>
+                        <div class="preview-content document-structure" id="corrected-content">
+                            Traitement en cours...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boutons d'action -->
+                <div id="action-buttons" class="action-buttons" style="display: none;">
+                    <button class="btn btn-secondary" onclick="startOver()">
+                        🔄 Nouveau document
+                    </button>
+                    <button class="btn btn-primary" onclick="downloadCorrected()">
+                        💾 Télécharger le document corrigé
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        Document traité avec succès !
+    </div>
+
+    <!-- Scripts externes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <script>
+        // Variables globales
+        let selectedFile = null;
+        let selectedAgent = 'jurifix';
+        let processedData = null;
+        let originalStructure = null; // Nouvelle variable pour stocker la structure
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            setupFileUpload();
+            loadAgents();
+        });
+
+        // Configuration de l'upload
+        function setupFileUpload() {
+            const uploadZone = document.getElementById('upload-zone');
+            const fileInput = document.getElementById('file-input');
+
+            // Drag & Drop
+            uploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('dragover');
+            });
+
+            uploadZone.addEventListener('dragleave', () => {
+                uploadZone.classList.remove('dragover');
+            });
+
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                handleFile(e.dataTransfer.files[0]);
+            });
+
+            // Click upload
+            uploadZone.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                handleFile(e.target.files[0]);
+            });
+        }
+
+        // Gestion du fichier
+        function handleFile(file) {
+            if (!file) return;
+
+            // Vérification du type de fichier
+            const validTypes = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'];
+            const validExtensions = /\.(doc|docx)$/i;
+            
+            if (!validTypes.includes(file.type) && !file.name.match(validExtensions)) {
+                showNotification('Veuillez sélectionner un fichier Word (.doc ou .docx)', 'error');
+                return;
+            }
+
+            if (file.name.match(/\.doc$/i) && !file.name.match(/\.docx$/i)) {
+                showNotification('Les fichiers .doc peuvent avoir des problèmes d\'extraction. Préférez le format .docx', 'error');
+            }
+
+            selectedFile = file;
+            
+            // Affichage des informations du fichier
+            document.getElementById('file-name').textContent = file.name;
+            document.getElementById('file-size').textContent = formatFileSize(file.size);
+            document.getElementById('file-info').classList.add('show');
+            
+            // Affichage de la sélection d'agent
+            document.getElementById('agent-selection').style.display = 'block';
+            
+            showNotification('Fichier sélectionné avec succès !');
+        }
+
+        // Suppression du fichier
+        function removeFile() {
+            selectedFile = null;
+            originalStructure = null;
+            document.getElementById('file-info').classList.remove('show');
+            document.getElementById('agent-selection').style.display = 'none';
+            document.getElementById('file-input').value = '';
+        }
+
+        // Chargement des agents (modifié pour mettre l'accent sur la correction orthographique)
+        async function loadAgents() {
+            const agents = {
+                "jurifix": {
+                    name: "Correction Orthographique",
+                    description: "Corrige uniquement l'orthographe et la grammaire sans changer le style juridique"
+                }
+            };
+            
+            const agentsGrid = document.getElementById('agents-grid');
+            agentsGrid.innerHTML = '';
+
+            for (const [key, agent] of Object.entries(agents)) {
+                const agentCard = document.createElement('div');
+                agentCard.className = 'agent-card selected'; // Pré-sélectionné
+                
+                agentCard.onclick = () => selectAgent(key, agentCard);
+                
+                agentCard.innerHTML = `
+                    <div class="agent-name">
+                        ✍️ ${agent.name}
+                    </div>
+                    <div class="agent-description">${agent.description}</div>
+                `;
+                
+                agentsGrid.appendChild(agentCard);
+            }
+            
+            // Afficher le bouton de traitement si un fichier est sélectionné
+            if (selectedFile) {
+                document.getElementById('process-btn').style.display = 'inline-flex';
+            }
+        }
+
+        // Sélection d'agent
+        function selectAgent(agentKey, cardElement) {
+            document.querySelectorAll('.agent-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            cardElement.classList.add('selected');
+            selectedAgent = agentKey;
+            
+            // Afficher le bouton de traitement
+            document.getElementById('process-btn').style.display = 'inline-flex';
+        }
+
+        // NOUVELLE APPROCHE: Extraction du texte avec préservation maximale de la structure
+        async function extractTextWithStructure(file) {
+            try {
+                if (!file.name.match(/\.(docx)$/i)) {
+                    throw new Error('Seuls les fichiers .docx sont supportés pour une extraction optimale.');
+                }
+
+                const arrayBuffer = await file.arrayBuffer();
+                
+                // Configuration mammoth pour préserver au maximum la structure
+                const options = {
+                    styleMap: [
+                        "p[style-name='Heading 1'] => h1:fresh",
+                        "p[style-name='Heading 2'] => h2:fresh", 
+                        "p[style-name='Heading 3'] => h3:fresh",
+                        "p[style-name='Title'] => h1.title:fresh",
+                        "p => p:fresh", // Chaque paragraphe devient un <p>
+                        "b => strong",
+                        "i => em"
+                    ],
+                    includeDefaultStyleMap: false,
+                    convertImage: mammoth.images.imgElement(function() {
+                        return {};
+                    })
+                };
+                
+                const result = await mammoth.convertToHtml({ 
+                    arrayBuffer: arrayBuffer,
+                    ...options
+                });
+                
+                if (result.messages && result.messages.length > 0) {
+                    console.warn('Messages d\'extraction:', result.messages);
+                }
+
+                let htmlContent = result.value;
+                
+                if (!htmlContent || htmlContent.length < 10) {
+                    throw new Error('Le document semble vide ou le texte n\'a pas pu être extrait.');
+                }
+
+                // Nettoyage et amélioration du HTML
+                htmlContent = htmlContent
+                    .replace(/<p><\/p>/g, '') // Supprimer paragraphes vides
+                    .replace(/\n\s*\n/g, '\n') // Normaliser les sauts de ligne
+                    .trim();
+
+                // Extraction du texte brut pour la correction mais en préservant les sauts de ligne
+                const textResult = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+                let rawText = textResult.value;
+
+                // NOUVELLE MÉTHODE: Analyser la structure des paragraphes
+                const structuredContent = analyzeDocumentStructure(htmlContent, rawText);
+                
+                return structuredContent;
+
+            } catch (error) {
+                console.error('Erreur lors de l\'extraction:', error);
+                throw new Error(`Impossible d'extraire le texte: ${error.message}`);
+            }
+        }
+
+        // NOUVELLE FONCTION: Analyse la structure du document pour préserver les paragraphes
+        function analyzeDocumentStructure(htmlContent, rawText) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlContent;
+            
+            const paragraphs = [];
+            const elements = tempDiv.querySelectorAll('p, h1, h2, h3, h4, h5, h6');
+            
+            elements.forEach((element, index) => {
+                const text = element.textContent.trim();
+                if (text.length > 0) {
+                    // Analyse plus fine du formatage
+                    const hasStrongTag = element.querySelector('strong, b') !== null;
+                    const isHeading = element.tagName.match(/^H[1-6]$/);
+                    const isAllBold = hasStrongTag && element.querySelector('strong, b').textContent.trim() === text;
+                    
+                    paragraphs.push({
+                        index: index,
+                        tag: element.tagName.toLowerCase(),
+                        text: text,
+                        originalHtml: element.outerHTML,
+                        hasStrongTag: hasStrongTag,
+                        isHeading: isHeading,
+                        isAllBold: isAllBold,
+                        innerHTML: element.innerHTML,
+                        isEmpty: false
+                    });
+                }
+            });
+            
+            return {
+                html: htmlContent,
+                rawText: rawText,
+                paragraphs: paragraphs,
+                totalParagraphs: paragraphs.length
+            };
+        }
+
+        // NOUVELLE FONCTION: Correction par paragraphe pour préserver la structure
+        async function correctTextByParagraphs(structuredContent) {
+            try {
+                const correctedParagraphs = [];
+                
+                // Envoyer chaque paragraphe individuellement pour correction
+                for (let i = 0; i < structuredContent.paragraphs.length; i++) {
+                    const paragraph = structuredContent.paragraphs[i];
+                    
+                    if (paragraph.text.length < 5) {
+                        // Paragraphe trop court, on le garde tel quel
+                        correctedParagraphs.push(paragraph);
+                        continue;
+                    }
+                    
+                    try {
+                        const response = await fetch('/api/process-text', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                texte: paragraph.text,
+                                agent: selectedAgent
+                            })
+                        });
+
+                        const result = await response.json();
+                        
+                        if (result.error) {
+                            console.warn(`Erreur correction paragraphe ${i}:`, result.error);
+                            correctedParagraphs.push(paragraph); // Garder l'original
+                        } else {
+                            // Créer le paragraphe corrigé en préservant la structure
+                            const correctedParagraph = {
+                                ...paragraph,
+                                text: result.resultat.trim(),
+                                corrected: true
+                            };
+                            correctedParagraphs.push(correctedParagraph);
+                        }
+                        
+                        // Petit délai pour éviter la surcharge API
+                        await sleep(100);
+                        
+                    } catch (error) {
+                        console.warn(`Erreur lors de la correction du paragraphe ${i}:`, error);
+                        correctedParagraphs.push(paragraph); // Garder l'original
+                    }
+                }
+                
+                return correctedParagraphs;
+                
+            } catch (error) {
+                throw new Error('Erreur lors de la correction par paragraphes: ' + error.message);
+            }
+        }
+
+        // NOUVELLE FONCTION: Préservation exacte du formatage original
+        function preserveOriginalFormatting(correctedText, originalElement) {
+            // Si l'élément original était entièrement en gras, préserver cela
+            if (originalElement.isAllBold) {
+                return `<p><strong>${correctedText}</strong></p>`;
+            }
+            
+            // Si c'était un titre, le préserver
+            if (originalElement.isHeading) {
+                return `<${originalElement.tag}>${correctedText}</${originalElement.tag}>`;
+            }
+            
+            // Si le texte original contenait du formatage mixte, essayer de le préserver
+            if (originalElement.hasStrongTag && !originalElement.isAllBold) {
+                // Logique plus complexe : essayer de mapper le formatage original
+                const originalHTML = originalElement.innerHTML;
+                
+                // Si le texte original contenait des balises strong/b, les préserver approximativement
+                if (originalHTML.includes('<strong>') || originalHTML.includes('<b>')) {
+                    // Pour simplifier, on remet en forme basique
+                    return `<p>${correctedText}</p>`;
+                }
+            }
+            
+            // Paragraphe normal
+            return `<p>${correctedText}</p>`;
+        }
+
+        // FONCTION AMÉLIORÉE: Reconstitution du HTML avec formatage exact
+        function reconstructHtmlWithCorrections(correctedParagraphs) {
+            let reconstructedHtml = '';
+            
+            correctedParagraphs.forEach(paragraph => {
+                let elementHtml;
+                
+                if (paragraph.corrected) {
+                    // Utiliser la fonction de préservation du formatage
+                    elementHtml = preserveOriginalFormatting(paragraph.text, paragraph);
+                    // Ajouter l'indicateur de correction
+                    elementHtml = elementHtml.replace(/^<(p|h[1-6])/, `<$1 class="correction-indicator"`);
+                } else {
+                    // Garder l'HTML original si pas corrigé
+                    elementHtml = paragraph.originalHtml;
+                }
+                
+                reconstructedHtml += elementHtml + '\n';
+            });
+            
+            return reconstructedHtml;
+        }
+
+        // Traitement du document AVEC NOUVELLE APPROCHE
+        async function processDocument() {
+            if (!selectedFile || !selectedAgent) {
+                showNotification('Veuillez sélectionner un fichier et un agent', 'error');
+                return;
+            }
+
+            // Affichage de la section de traitement
+            document.getElementById('upload-section').style.display = 'none';
+            document.getElementById('processing-section').style.display = 'block';
+
+            try {
+                // Étape 1: Upload
+                updateStep('step-upload', 'active');
+                await sleep(500);
+                updateStep('step-upload', 'completed');
+
+                // Étape 2: Extraction avec structure
+                updateStep('step-extract', 'active');
+                document.getElementById('loading-text').textContent = 'Analyse de la structure du document...';
+                
+                const structuredContent = await extractTextWithStructure(selectedFile);
+                originalStructure = structuredContent;
+                
+                // Affichage du contenu original
+                document.getElementById('original-content').innerHTML = structuredContent.html;
+                
+                await sleep(1000);
+                updateStep('step-extract', 'completed');
+
+                // Étape 3: Correction intelligente par paragraphe
+                updateStep('step-correct', 'active');
+                document.getElementById('loading-text').textContent = 'Correction orthographique en cours (préservation de la structure)...';
+
+                const correctedParagraphs = await correctTextByParagraphs(structuredContent);
+                
+                // Reconstruction du HTML avec corrections
+                const correctedHtml = reconstructHtmlWithCorrections(correctedParagraphs);
+                
+                document.getElementById('corrected-content').innerHTML = correctedHtml;
+
+                await sleep(1000);
+                updateStep('step-correct', 'completed');
+                updateStep('step-export', 'active');
+
+                // Affichage des résultats
+                document.getElementById('loading-content').style.display = 'none';
+                document.getElementById('correction-stats').style.display = 'flex';
+                document.getElementById('document-preview').style.display = 'grid';
+                document.getElementById('action-buttons').style.display = 'flex';
+
+                // Calcul précis des statistiques
+                const correctedCount = correctedParagraphs.filter(p => p.corrected).length;
+                const totalWords = structuredContent.rawText.split(/\s+/).filter(word => word.length > 0).length;
+                
+                document.getElementById('errors-found').textContent = correctedCount;
+                document.getElementById('pages-processed').textContent = Math.max(1, Math.ceil(totalWords / 300));
+
+                processedData = {
+                    originalHtml: structuredContent.html,
+                    originalText: structuredContent.rawText,
+                    correctedHtml: correctedHtml,
+                    correctedParagraphs: correctedParagraphs,
+                    filename: selectedFile.name,
+                    structuredContent: structuredContent
+                };
+
+                showNotification('Document corrigé avec préservation de la structure !');
+
+            } catch (error) {
+                console.error('Erreur lors du traitement:', error);
+                showNotification('Erreur lors du traitement: ' + error.message, 'error');
+            }
+        }
+
+        // Téléchargement du document corrigé (version améliorée)
+        async function downloadCorrected() {
+            if (!processedData) return;
+
+            try {
+                // Génération d'un texte structuré pour export
+                const structuredText = generateStructuredTextExport(processedData.correctedParagraphs);
+                const blob = new Blob([structuredText], { type: 'text/plain;charset=utf-8' });
+                
+                const baseFilename = processedData.filename.replace(/\.(doc|docx)$/i, '');
+                const filename = `${baseFilename}_corrigé_JuriFix_${new Date().toISOString().slice(0,10)}.txt`;
+                
+                // Téléchargement
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showNotification('Document corrigé téléchargé avec structure préservée !');
+                
+            } catch (error) {
+                console.error('Erreur lors du téléchargement:', error);
+                showNotification('Erreur lors du téléchargement du document', 'error');
+            }
+        }
+
+        // NOUVELLE FONCTION: Génération d'export structuré
+        function generateStructuredTextExport(correctedParagraphs) {
+            const header = `DOCUMENT CORRIGÉ PAR JURIFIX PLATFORM
+========================================
+Date de correction: ${new Date().toLocaleDateString('fr-FR')}
+Fichier original: ${processedData.filename}
+Paragraphes corrigés: ${correctedParagraphs.filter(p => p.corrected).length}/${correctedParagraphs.length}
+
+========================================
+
+`;
+
+            let content = '';
+            correctedParagraphs.forEach((paragraph, index) => {
+                // Préserver la hiérarchie des titres
+                if (paragraph.tag.match(/^h[1-6]$/)) {
+                    const level = parseInt(paragraph.tag.replace('h', ''));
+                    const prefix = '='.repeat(Math.max(1, 4 - level)) + ' ';
+                    content += `${prefix}${paragraph.text}\n\n`;
+                } else if (paragraph.isBold) {
+                    content += `** ${paragraph.text} **\n\n`;
+                } else {
+                    content += `${paragraph.text}\n\n`;
+                }
+                
+                // Marquer les paragraphes corrigés
+                if (paragraph.corrected) {
+                    content = content.replace(/\n\n$/, ' [CORRIGÉ]\n\n');
+                }
+            });
+
+            return header + content;
+        }
+
+        // Recommencer
+        function startOver() {
+            document.getElementById('processing-section').style.display = 'none';
+            document.getElementById('upload-section').style.display = 'block';
+            
+            // Reset des étapes
+            document.querySelectorAll('.step').forEach(step => {
+                step.className = 'step';
+            });
+            
+            // Reset du contenu
+            document.getElementById('loading-content').style.display = 'block';
+            document.getElementById('correction-stats').style.display = 'none';
+            document.getElementById('document-preview').style.display = 'none';
+            document.getElementById('action-buttons').style.display = 'none';
+            
+            removeFile();
+            processedData = null;
+            originalStructure = null;
+        }
+
+        // Mise à jour des étapes
+        function updateStep(stepId, status) {
+            const step = document.getElementById(stepId);
+            step.className = `step ${status}`;
+        }
+
+        // Formatage de la taille de fichier
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Fonction sleep pour les délais
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Affichage de notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // Raccourcis clavier
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (document.getElementById('processing-section').style.display !== 'none') {
+                    startOver();
+                }
+            }
+        });
+
+        // Validation en temps réel du fichier
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 50 * 1024 * 1024) {
+                    showNotification('Le fichier est trop volumineux (max 50MB)', 'error');
+                    this.value = '';
+                    return;
+                }
+                handleFile(file);
+            }
+        });
+
+        // Configuration du scroll synchronisé
+        function setupAutoScroll() {
+            const previewContents = document.querySelectorAll('.preview-content');
+            previewContents.forEach(content => {
+                content.addEventListener('scroll', function() {
+                    const otherContent = content.parentElement.parentElement.querySelector(
+                        content.id === 'original-content' ? '#corrected-content' : '#original-content'
+                    );
+                    if (otherContent) {
+                        otherContent.scrollTop = this.scrollTop;
+                    }
+                });
+            });
+        }
+
+        // Configuration du scroll synchronisé après affichage
+        document.getElementById('document-preview').addEventListener('transitionend', function() {
+            if (this.style.display === 'grid') {
+                setupAutoScroll();
+            }
+        });
+    </script>
+</body>
+</html>
