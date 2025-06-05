@@ -167,4 +167,4 @@ Le code contient déjà des points d'extension commentés avec `# FUTURE:` pour 
 
 ## 📞 Support
 
-Pour toute question technique : support@jurisfix.fr
+Pour toute question technique : rsultan@fbf.fr
